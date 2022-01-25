@@ -19,14 +19,15 @@ const RenderDish = ({ dish }) => {
   }
 };
 
-const RenderComments = (dish) => {
-  if (dish != null) {
+const RenderComments = (comments) => {
+  if (comments != null) {
     return (
       <div className='col-12 col-md-5 m-1'>
         <Card>
           <CardBody>
             <CardTitle heading>Comments</CardTitle>
-            {dish.comments.map((comment) => {
+            {console.log(comments)}
+            {comments.comments.map((comment) => {
               return (
                 <CardText>
                   {comment.comment}
@@ -51,12 +52,18 @@ const RenderComments = (dish) => {
 };
 
 const DishDetail = (props) => {
-  return (
-    <div className='row'>
-      <RenderDish dish={props.dish} />
-      <RenderComments dish={props.dish} />
-    </div>
-  );
+  if (props.dish != null) {
+    return (
+      <div className='row'>
+        <RenderDish dish={props.dish} />
+        <RenderComments comments={props.dish.comments} />
+      </div>
+    );
+  } else {
+    return (
+      <div></div>
+    )
+  }
 };
 
 export default DishDetail;
