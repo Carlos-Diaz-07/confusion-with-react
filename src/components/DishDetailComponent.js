@@ -8,7 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
-const required = (val) => val && val.length; //value > 0
+const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => (val) && (val.length >= len);
 
@@ -26,10 +26,6 @@ class CommentForm extends Component {
 
   }
 
-  handleCommentFormSubmit(values) {
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
-  }
 
   toggleCommentFormModal() {
     this.setState({
@@ -37,6 +33,12 @@ class CommentForm extends Component {
     });
   }
 
+  handleCommentFormSubmit(values) {
+    this.toggleCommentFormModal();
+    console.log("Current State is: " + JSON.stringify(values));
+    alert("Current State is: " + JSON.stringify(values));
+    this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+  }
 
   render() {
     return (
@@ -151,33 +153,30 @@ const RenderDish = ({ dish }) => {
   }
 };
 
-const RenderComments = (dish, comments) => {
+const RenderComments = ({ comments, addComment, dishId }) => {
   if (comments != null) {
     return (
       <div className='col-12 col-md-5 m-1'>
         <Card>
           <CardBody>
             <CardTitle heading>Comments</CardTitle>
-            {/* {console.log(comments)} */}
-            {console.log(dish)}
-
-            {dish.comments.map((comment) => {
-              return (
-                <CardText>
-                  {comment.comment}
-                  <br />
-                  <br />
-                  -- {comment.author},{" "}
-                  {new Intl.DateTimeFormat("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "2-digit",
-                  }).format(new Date(Date.parse(comment.date)))}
-                </CardText>
-              );
-            })}
+              {comments.map((comment) => {
+                return (
+                  <CardText>
+                    {comment.comment}
+                    <br />
+                    <br />
+                    -- {comment.author},{" "}
+                    {new Intl.DateTimeFormat("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "2-digit",
+                    }).format(new Date(Date.parse(comment.date)))}
+                  </CardText>
+                );
+              })}
           </CardBody>
-          <CommentForm dish={dish} comments={comments} />
+          <CommentForm dishId={dishId} addComment={addComment} />
         </Card>
       </div>
     );
@@ -202,7 +201,10 @@ const DishDetail = (props) => {
         </div>
         <div className="row">
           <RenderDish dish={props.dish} />
-          <RenderComments dish={props.dish} comments={props.comments} />
+          <RenderComments comments={props.comments}
+            addComment={props.addComment}
+            dishId={props.dish.id}
+          />
         </div>
       </div>
     );
