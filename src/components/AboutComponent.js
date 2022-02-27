@@ -5,38 +5,6 @@ import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 import { Stagger, Fade } from 'react-animation-components';
 
-function RenderCard({ item, isLoading, errMess }) {
-
-  if (isLoading) {
-    return (
-      <Loading />
-    );
-  }
-  else if (errMess) {
-    return (
-      <h4>{errMess}</h4>
-    );
-  }
-  else {
-    return (
-      <Stagger in>
-        <Media tag="li">
-          <Media left>
-            <Media object src={baseUrl + item.image} alt={item.name} />
-          </Media>
-
-          <Media body>
-            <Media heading className={"p-2"}>{item.name}</Media>
-            <h6 className={"pl-2"}>{item.designation}</h6>
-            <p className={"p-2"}>{item.description}</p>
-          </Media>
-        </Media>
-      </Stagger>
-    );
-  };
-}
-
-
 function About(props) {
   const leaders = props.leaders.map((item) => {
     if (item.isLoading) {
@@ -51,7 +19,7 @@ function About(props) {
     }
     else {
       return (
-        <Fade in>
+        <Fade key={item.id} in>
           <Media tag="li">
             <Media left>
               <Media object src={baseUrl + item.image} alt={item.name} />
